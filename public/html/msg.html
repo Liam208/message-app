@@ -3,7 +3,61 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Valentine Message</title>
+    <meta
+      name="description"
+      content="View your secret Valentine message! Click to reveal a sweet note sent just for you. Messages self-destruct after 3 days."
+    />
+    <meta
+      name="keywords"
+      content="valentine, message, secret, love, anonymous, reveal, sweet, romantic, note, self-destruct, private, friendship"
+    />
+    <meta name="author" content="Liam" />
+    <link rel="canonical" href="https://message-liam.onrender.com/message/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="You Received a Valentine Message!" />
+    <meta
+      property="og:description"
+      content="Click to reveal your secret Valentine message. Messages self-destruct after 3 days."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://message-liam.onrender.com/message/"
+    />
+    <meta
+      property="og:image"
+      content="https://message-liam.onrender.com/preview.png"
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="You Received a Valentine Message!" />
+    <meta
+      name="twitter:description"
+      content="Click to reveal your secret Valentine message. Messages self-destruct after 3 days."
+    />
+    <meta
+      name="twitter:image"
+      content="https://message-liam.onrender.com/preview.png"
+    />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Valentine Message Reveal",
+        "url": "https://message-liam.onrender.com/message/",
+        "description": "View your secret Valentine message! Click to reveal a sweet note sent just for you. Messages self-destruct after 3 days.",
+        "author": {
+          "@type": "Person",
+          "name": "Liam"
+        }
+      }
+    </script>
+
+    <title>You Received a Valentine Message! | Valentine Message App</title>
     <link href="../css/output.css" rel="stylesheet" />
     <style>
       body {
@@ -35,12 +89,18 @@
     <nav
       class="flex items-center justify-between px-8 py-5 text-white shadow-lg"
       style="background: linear-gradient(90deg, #ff5ecf 0%, #a259ff 100%)"
+      aria-label="Main Navigation"
     >
       <div class="text-2xl font-extrabold tracking-wide drop-shadow">
-        💌 Message
+        <a href="/" aria-label="Valentine Message Home">💌 Message</a>
       </div>
       <div class="space-x-8 text-lg">
-        <a href="/" class="transition hover:text-pink-200">Create your own</a>
+        <a
+          href="/"
+          class="transition hover:text-pink-200"
+          aria-label="Create your own message"
+          >Create your own</a
+        >
       </div>
     </nav>
 
@@ -95,7 +155,7 @@
         <h6
           class="mt-4 font-mono text-xl font-bold text-center text-purple-700"
         >
-          Made by Liam
+          Made by <span itemprop="author">Liam</span>
         </h6>
       </div>
     </div>
