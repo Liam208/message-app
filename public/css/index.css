@@ -1,0 +1,31 @@
+@import "tailwindcss";
+:root {
+  --color-brilliant-rose-50: #fff7fd;
+  --color-brilliant-rose-100: #fcebf7;
+  --color-brilliant-rose-200: #facfec;
+  --color-brilliant-rose-300: #f7b2df;
+  --color-brilliant-rose-400: #f27ec0;
+  --color-brilliant-rose-500: #ec4899;
+  --color-brilliant-rose-600: #d63c87;
+  --color-brilliant-rose-700: #b32965;
+  --color-brilliant-rose-800: #8f1b49;
+  --color-brilliant-rose-900: #6b0f31;
+  --color-brilliant-rose-950: #45061a;
+
+  /* purple */
+  --color-purple-pizzazz-50: #fff2fe;
+  --color-purple-pizzazz-100: #ffe8fd;
+  --color-purple-pizzazz-200: #ffc4f9;
+  --color-purple-pizzazz-300: #fc9ff3;
+  --color-purple-pizzazz-400: #fc58e7;
+  --color-purple-pizzazz-500: #fa11d7;
+  --color-purple-pizzazz-600: #e00db6;
+  --color-purple-pizzazz-700: #ba098e;
+  --color-purple-pizzazz-800: #960669;
+  --color-purple-pizzazz-900: #700346;
+  --color-purple-pizzazz-950: #470128;
+}
+
+textarea {
+  resize: none;
+}

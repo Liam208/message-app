@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Message App</title>
+    <link href="../css/output.css" rel="stylesheet" />
+    <style>
+      body {
+        background: linear-gradient(135deg, #ffe0f7 0%, #e0e7ff 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", "Roboto", sans-serif;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        backdrop-filter: blur(6px);
+      }
+      .fade-in {
+        animation: fadeIn 0.7s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="flex items-center justify-between px-8 py-5 text-white shadow-lg"
+      style="background: linear-gradient(90deg, #ff5ecf 0%, #a259ff 100%)"
+    >
+      <div
+        class="flex flex-col text-2xl font-extrabold tracking-wide text-center drop-shadow"
+      >
+        💌 Message
+      </div>
+      <div class="space-x-8 text-lg">
+        <a href="#" class="transition hover:text-pink-200">Create your own</a>
+      </div>
+    </nav>
+
+    <div
+      class="flex items-center justify-center min-h-[80vh] px-2 sm:px-0 mt-5"
+    >
+      <div
+        class="w-full max-w-xs p-4 glass rounded-2xl sm:p-8 sm:max-w-md fade-in"
+      >
+        <h1
+          class="mb-4 font-mono text-2xl font-bold text-center text-purple-700"
+        >
+          Type your message
+        </h1>
+        <!-- Error box -->
+        <div
+          id="errorBox"
+          class="px-4 py-2 mb-3 font-semibold text-center text-red-700 bg-red-100 border border-red-400 rounded"
+          style="display: none"
+        >
+          Message required
+        </div>
+        <!-- Server error box -->
+        <div
+          id="serverErrorBox"
+          class="px-4 py-2 mb-3 font-semibold text-center text-red-700 bg-red-100 border border-red-400 rounded"
+          style="display: none"
+        >
+          Server error. Please try again later.
+        </div>
+        <div
+          class="mb-4 overflow-hidden border-4 border-pink-400 shadow rounded-xl"
+        >
+          <textarea
+            id="messageText"
+            class="w-full h-32 p-4 text-lg text-gray-700 bg-transparent outline-none resize-none"
+            placeholder="Write something sweet..."
+          ></textarea>
+        </div>
+        <button
+          class="w-full px-4 py-2 mb-4 font-semibold text-white transition rounded-lg shadow bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+          id="sendBtn"
+        >
+          Submit
+        </button>
+
+        <div
+          id="copyBox"
+          class="p-4 mt-2 bg-white border-4 border-pink-400 shadow rounded-xl fade-in"
+          style="display: none"
+        >
+          <h2
+            class="mb-2 font-mono text-lg font-bold text-center text-purple-700"
+          >
+            Here is your link
+          </h2>
+          <input
+            id="linkText"
+            type="text"
+            class="w-full p-2 mb-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 bg-gray-50"
+            readonly
+          />
+          <button
+            id="copyBtn"
+            class="w-full px-4 py-2 font-semibold text-white transition rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+          >
+            Copy!
+          </button>
+        </div>
+        <h6
+          class="mt-4 font-mono text-xl font-bold text-center text-purple-700"
+        >
+          Tutorial
+        </h6>
+        <ul class="px-4 mt-3 text-purple-700 list-disc list-outside">
+          <li>Type your message in the text area.</li>
+          <li>Click the "Submit" button to generate a unique link.</li>
+          <li>
+            Copy the generated link by clicking the "Copy!" button or selecting
+            it manually.
+          </li>
+          <li>
+            Share the link with your loved one or your friends. When they open
+            it, they will see your message by clicking on show message.
+          </li>
+          <li>
+            Note: Messages are stored securely and will expire after 3 days.
+          </li>
+        </ul>
+        <h6
+          class="mt-4 font-mono text-xl font-bold text-center text-purple-700"
+        >
+          Made by Liam
+        </h6>
+      </div>
+    </div>
+
+    <script>
+      let button = document.getElementById("sendBtn");
+      let text = document.getElementById("messageText");
+
+      let link = document.getElementById("linkText");
+      let copy = document.getElementById("copyBtn");
+      let copybox = document.getElementById("copyBox");
+
+      let errorBox = document.getElementById("errorBox");
+      let serverErrorBox = document.getElementById("serverErrorBox");
+
+      button.addEventListener("click", async () => {
+        const message = text.value.trim();
+        errorBox.style.display = "none";
+        serverErrorBox.style.display = "none";
+        if (!message) {
+          errorBox.style.display = "block";
+          copybox.style.display = "none";
+          return;
+        }
+        try {
+          const response = await fetch("/send", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message }),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            serverErrorBox.textContent =
+              data.msg || "Server error. Please try again later.";
+            serverErrorBox.style.display = "block";
+            copybox.style.display = "none";
+            return;
+          }
+
+          link.value = data.link;
+          text.value = "";
+          errorBox.style.display = "none";
+          serverErrorBox.style.display = "none";
+          copybox.style.display = "";
+        } catch (error) {
+          console.error(error);
+          serverErrorBox.textContent = "Server error. Please try again later.";
+          serverErrorBox.style.display = "block";
+          copybox.style.display = "none";
+        }
+      });
+      copy.addEventListener("click", () => {
+        if (!link.value) return;
+
+        if (navigator.clipboard && window.isSecureContext) {
+          // Modern browsers / secure context
+          navigator.clipboard
+            .writeText(link.value)
+            .then(() => {
+              copy.innerText = "Copied!";
+              setTimeout(() => (copy.innerText = "Copy!"), 1200);
+            })
+            .catch(() => {
+              fallbackCopy(link.value);
+            });
+        } else {
+          // Fallback for older / mobile browsers
+          fallbackCopy(link.value);
+        }
+      });
+
+      function fallbackCopy(text) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed"; // avoid scrolling to bottom
+        textarea.style.top = 0;
+        textarea.style.left = 0;
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+
+        try {
+          document.execCommand("copy");
+          copy.innerText = "Copied!";
+          setTimeout(() => (copy.innerText = "Copy!"), 1200);
+        } catch (err) {
+          alert("Failed to copy");
+        }
+
+        document.body.removeChild(textarea);
+      }
+    </script>
+  </body>
+</html>

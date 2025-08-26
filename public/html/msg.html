@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Valentine Message</title>
+    <link href="../css/output.css" rel="stylesheet" />
+    <style>
+      body {
+        background: linear-gradient(135deg, #ffe0f7 0%, #e0e7ff 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", "Roboto", sans-serif;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        backdrop-filter: blur(6px);
+      }
+      .fade-in {
+        animation: fadeIn 0.7s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="flex items-center justify-between px-8 py-5 text-white shadow-lg"
+      style="background: linear-gradient(90deg, #ff5ecf 0%, #a259ff 100%)"
+    >
+      <div class="text-2xl font-extrabold tracking-wide drop-shadow">
+        💌 Message
+      </div>
+      <div class="space-x-8 text-lg">
+        <a href="/" class="transition hover:text-pink-200">Create your own</a>
+      </div>
+    </nav>
+
+    <div class="flex items-center justify-center min-h-[80vh] px-2 sm:px-0">
+      <div
+        class="w-full max-w-xs p-4 glass rounded-2xl sm:p-8 sm:max-w-md fade-in"
+      >
+        <h1
+          class="mb-4 font-mono text-2xl font-bold text-center text-purple-700"
+        >
+          You received a message!
+        </h1>
+        <div
+          class="mb-4 overflow-hidden bg-white border-4 border-pink-400 shadow rounded-xl"
+        >
+          <p
+            id="message"
+            class="w-full min-h-[80px] p-4 text-lg text-gray-700 break-words text-center"
+            style="display: none"
+          >
+            Loading...
+          </p>
+        </div>
+        <!-- Server error box -->
+        <div
+          id="serverErrorBox"
+          class="px-4 py-2 mb-3 font-semibold text-center text-red-700 bg-red-100 border border-red-400 rounded"
+          style="display: none"
+        >
+          Server error. Please try again later.
+        </div>
+        <button
+          id="showBtn"
+          class="block w-full px-4 py-2 mb-2 font-semibold text-center text-white transition rounded-lg shadow bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+        >
+          Show Message
+        </button>
+        <a
+          href="index.html"
+          class="block w-full px-4 py-2 mt-2 font-semibold text-center text-white transition rounded-lg shadow bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+        >
+          Send your own message
+        </a>
+        <h6
+          class="mt-4 font-mono text-xl font-bold text-center text-purple-700"
+        >
+          Tutorial
+        </h6>
+        <ul class="px-4 mt-3 text-purple-700 list-disc list-outside">
+          <li>Click on show message to see the message.</li>
+        </ul>
+        <h6
+          class="mt-4 font-mono text-xl font-bold text-center text-purple-700"
+        >
+          Made by Liam
+        </h6>
+      </div>
+    </div>
+
+    <script>
+      // Get the message ID from the URL path (e.g., /message/1234)
+      function getMessageIdFromURL() {
+        const match = window.location.pathname.match(
+          /\/message\/([a-zA-Z0-9\-]+)/
+        );
+        return match ? match[1] : null;
+      }
+
+      const messageElem = document.getElementById("message");
+      const showBtn = document.getElementById("showBtn");
+      const serverErrorBox = document.getElementById("serverErrorBox");
+      let fetchedMessage = "No message found.";
+
+      async function loadMessage() {
+        const id = getMessageIdFromURL();
+        if (!id) {
+          fetchedMessage = "No message found.";
+          return;
+        }
+        try {
+          const res = await fetch(`/api/message/${id}`);
+          if (!res.ok) throw new Error("Message not found");
+          const data = await res.json();
+          fetchedMessage = data.message;
+        } catch (err) {
+          serverErrorBox.textContent = "Server error. Please try again later.";
+          serverErrorBox.style.display = "block";
+          fetchedMessage = "";
+        }
+      }
+
+      showBtn.addEventListener("click", async () => {
+        showBtn.style.display = "none";
+        messageElem.style.display = "";
+        messageElem.textContent = "Loading...";
+        serverErrorBox.style.display = "none";
+        await loadMessage();
+        messageElem.textContent = fetchedMessage;
+      });
+
+      // Optionally, you can preload the message on page load if you want
+      // loadMessage();
+    </script>
+  </body>
+</html>
