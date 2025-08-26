@@ -7,12 +7,13 @@ import Message from "../models/mainModel.js"; // <-- import Message model
 // Current file path
 const __filename = fileURLToPath(import.meta.url);
 const escapeHtml = (str) => {
+  if (typeof str !== "string") return "";
   return str
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/'/g, "&#39;");
 };
 // Current directory
 const __dirname = path.dirname(__filename);
@@ -37,11 +38,11 @@ export const sendText = async (req, res) => {
       recipient,
       text: message,
     });
-    
+
     const id = msgDoc._id.toString();
     messages[id] = message; // Optionally keep in-memory for legacy support
-    console.log("saved to DB")
-    
+    console.log("saved to DB");
+
     const link = `${req.protocol}://${req.get("host")}/message/${id}`;
     res.json({ link });
   } catch (err) {
@@ -62,7 +63,7 @@ export const getMessageJson = async (req, res) => {
     const msgDoc = await Message.findById(id);
     if (!msgDoc) return res.status(404).json({ message: "Message not found" });
 
-    const safeMessage = escapeHtml(msgDoc.text);
+    const safeMessage = escapeHtml(msgDoc.text || "");
     res.json({
       message: safeMessage,
       sender: msgDoc.sender,

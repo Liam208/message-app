@@ -132,13 +132,19 @@
         }
       }
 
+      function decodeHtmlEntities(str) {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = str;
+        return txt.value;
+      }
+
       showBtn.addEventListener("click", async () => {
         showBtn.style.display = "none";
         messageElem.style.display = "";
         messageElem.textContent = "Loading...";
         serverErrorBox.style.display = "none";
         await loadMessage();
-        messageElem.textContent = fetchedMessage;
+        messageElem.textContent = decodeHtmlEntities(fetchedMessage);
       });
 
       // Optionally, you can preload the message on page load if you want

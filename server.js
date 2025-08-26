@@ -3,8 +3,10 @@ import { fileURLToPath } from "url";
 import path from "path";
 import routes from "./routes/main.routes.js";
 import connectDB from "./db/db.js";
-import { connect } from "net";
+import dotenv from "dotenv";
 
+dotenv.config();
+const port = process.env.PORT || 3030;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,7 +23,7 @@ app.use("/", routes);
 
 connectDB()
   .then(() => {
-    app.listen(3030, "0.0.0.0", () => {
+    app.listen(port, "0.0.0.0", () => {
       console.log("Server started on 3030");
     });
   })
