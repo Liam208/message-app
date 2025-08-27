@@ -28,7 +28,7 @@ This is a cute little web app to send sweet, self-destructing notes to your crus
 1. **Clone this repo**
 
    ```
-   git clone <your-repo-url>
+   git clone https://github.com/Liam208/message-app.git
    cd valentine
    ```
 
